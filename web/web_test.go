@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/kpfaulkner/murdermystery/mystery"
 )
@@ -195,6 +196,40 @@ func TestVerdictOffersShareLink(t *testing.T) {
 		if !strings.Contains(body, want) {
 			t.Errorf("verdict should offer a share challenge containing %q", want)
 		}
+	}
+}
+
+// TestTodaysMystery checks the home page offers the daily mystery and that
+// following it drops the player into the fixed hard, 6-suspect case seeded from
+// today's UTC date — the same puzzle for everyone playing that day.
+func TestTodaysMystery(t *testing.T) {
+	s, _ := newServer()
+	srv := httptest.NewServer(s.routes())
+	t.Cleanup(srv.Close)
+
+	if !strings.Contains(get(t, &http.Client{}, srv.URL+"/"), `href="/today"`) {
+		t.Fatal("home page should offer today's mystery")
+	}
+
+	jar, _ := cookiejar.New(nil)
+	client := &http.Client{Jar: jar} // follow the redirect into /case, carrying the cookie
+	resp, err := client.Get(srv.URL + "/today")
+	if err != nil {
+		t.Fatalf("GET /today: %v", err)
+	}
+	body, _ := io.ReadAll(resp.Body)
+	resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		t.Fatalf("GET /today landed on status %d, want 200", resp.StatusCode)
+	}
+
+	// The daily case is hard, 6 suspects, seeded from today's UTC date.
+	seed := dailySeed(time.Now())
+	m := mystery.Generate(seedRNG(seed), mystery.Options{
+		Suspects: 6, Seed: seed, Difficulty: mystery.Hard, Testimony: true,
+	})
+	if !strings.Contains(string(body), m.Estate) {
+		t.Errorf("today's mystery should be the daily seeded case at %q", m.Estate)
 	}
 }
 

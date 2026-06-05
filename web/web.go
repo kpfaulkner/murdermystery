@@ -144,6 +144,7 @@ func (s *Server) routes() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /", s.handleHome)
 	mux.HandleFunc("POST /new", s.handleNew)
+	mux.HandleFunc("GET /today", s.handleToday)
 	mux.HandleFunc("GET /play", s.handlePlay)
 	mux.HandleFunc("GET /case", s.withSession(s.handleCase))
 	mux.HandleFunc("GET /suspects", s.withSession(s.handleSuspects))
@@ -222,6 +223,25 @@ func (s *Server) handleNew(w http.ResponseWriter, r *http.Request) {
 // shared link points at, so a friend lands straight in the same mystery.
 func (s *Server) handlePlay(w http.ResponseWriter, r *http.Request) {
 	s.startGame(w, r, r.URL.Query())
+}
+
+// handleToday starts the daily mystery: a fixed hard, 6-suspect case whose seed
+// is derived from the current UTC date, so everyone who plays on the same day
+// gets the same puzzle.
+func (s *Server) handleToday(w http.ResponseWriter, r *http.Request) {
+	v := url.Values{}
+	v.Set("seed", strconv.FormatUint(dailySeed(time.Now()), 10))
+	v.Set("suspects", "6")
+	v.Set("difficulty", "hard")
+	v.Set("testimony", "on")
+	s.startGame(w, r, v)
+}
+
+// dailySeed turns a moment into a seed that is constant for the whole UTC day,
+// so the daily mystery is identical for every player on that date.
+func dailySeed(t time.Time) uint64 {
+	y, m, d := t.UTC().Date()
+	return uint64(y)*10000 + uint64(m)*100 + uint64(d)
 }
 
 // startGame generates a case from the given values (a posted form or a shared
