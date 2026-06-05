@@ -1,0 +1,15 @@
+{{define "title"}}J'accuse!{{end}}
+{{define "content"}}
+<h1>J'accuse!</h1>
+<p class="dim">Name the killer. Choose carefully — there is only one chance.</p>
+<div class="panel">
+  <form method="post" action="/accuse">
+    <ul class="clean">
+      {{range $i, $name := .Suspects}}
+      <li><label><input type="radio" name="suspect" value="{{$i}}"{{if eq $i 0}} required{{end}}> {{$name}}</label></li>
+      {{end}}
+    </ul>
+    <button class="btn" type="submit">Accuse</button>
+  </form>
+</div>
+{{end}}

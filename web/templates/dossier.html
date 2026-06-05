@@ -1,0 +1,31 @@
+{{define "title"}}{{.Name}}{{end}}
+{{define "content"}}
+<h1>{{.Name}}</h1>
+<div class="panel">
+  {{if .Testimony}}
+    <p><span class="dim">Their account:</span> “I spent the evening in {{.ClaimedWhereabouts}}.”</p>
+    {{if .Sightings}}
+      <p class="dim">Witnesses say:</p>
+      <ul class="clean">{{range .Sightings}}<li>{{.}}</li>{{end}}</ul>
+    {{else}}
+      <p><span class="dim">Witnesses say:</span> no one places them anywhere in particular.</p>
+    {{end}}
+  {{else}}
+    <p><span class="dim">Whereabouts:</span> {{.Whereabouts}}{{if .Map}} <span class="{{if .Reachable}}near{{else}}far{{end}}">({{.Mins}} min from {{.Scene}} — {{if .Reachable}}within reach{{else}}too far{{end}})</span>{{end}}</p>
+  {{end}}
+
+  <p><span class="dim">Could reach:</span> {{.WeaponAccess}}{{if .HasMurderWeapon}} <span class="weapon">(includes the murder weapon)</span>{{end}}</p>
+
+  {{if .HasMotive}}
+    <p><span class="dim">Motive:</span> {{.Motive}}</p>
+  {{else}}
+    <p><span class="dim">Motive:</span> no known quarrel with the victim</p>
+  {{end}}
+
+  {{if .Rumours}}
+    <p class="dim">Whispers about them:</p>
+    <ul class="clean">{{range .Rumours}}<li>{{.}}</li>{{end}}</ul>
+  {{end}}
+</div>
+<p><a href="/suspects">← Back to the suspects</a></p>
+{{end}}

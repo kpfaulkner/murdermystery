@@ -1,0 +1,38 @@
+{{define "title"}}The Case{{end}}
+{{define "content"}}
+<h1>A murder at {{.Estate}}</h1>
+<p class="dim">{{.Weather}}</p>
+<p>On {{.Day}}, {{.Victim}} was found dead in {{.CrimeLocation}} by {{.Discoverer}}.<br>
+The cause of death: {{.Cause}}.</p>
+
+<div class="panel">
+  <h2 style="margin-top:0">Forensic report</h2>
+  <ul class="clean">
+    <li>Murder weapon: <span class="weapon">{{.Weapon}}</span></li>
+    <li>Time of death: {{.CrimeTime}}</li>
+    <li>Scene of the crime: {{.CrimeLocation}}</li>
+  </ul>
+</div>
+
+{{if .Map}}
+<div class="panel">
+  <h2 style="margin-top:0">The village</h2>
+  <p class="dim">The killer had at most <strong>{{.Window}} minutes</strong> to reach {{.CrimeLocation}}. A suspect within that walk could have slipped over and back; one further off is alibied by distance alone.</p>
+  <ul class="clean village">
+    {{range .Village}}
+      <li>{{.Place}} —
+        {{if .Scene}}<span class="weapon">the scene itself</span>
+        {{else if .Reachable}}{{.Mins}} min <span class="near">within reach</span>
+        {{else}}{{.Mins}} min <span class="far">too far</span>{{end}}
+      </li>
+    {{end}}
+  </ul>
+</div>
+{{end}}
+
+<p>There are {{.NumSuspects}} suspects. Examine the evidence, then name the killer.</p>
+<p>
+  <a class="btn" href="/suspects">Examine the suspects</a>
+  <a class="btn ghost" href="/grid">Open your deduction grid</a>
+</p>
+{{end}}

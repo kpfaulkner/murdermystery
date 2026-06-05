@@ -1,0 +1,10 @@
+{{define "title"}}Deduction Grid{{end}}
+{{define "content"}}
+<h1>Deduction grid</h1>
+<p class="dim">Record what you've worked out about each suspect. Click a cell to cycle it. The one who fits all three conditions is your killer. This grid also rides along on the right of every page, so you can keep it open while you investigate.</p>
+<div class="panel">
+  {{template "gridtable" .Nav.Grid}}
+  <p class="legend">✓ fits · ✗ ruled out · ? unsure · · unknown</p>
+</div>
+<p><a class="btn" href="/accuse">Make an accusation</a></p>
+{{end}}

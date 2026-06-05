@@ -1,0 +1,56 @@
+{{define "title"}}Verdict{{end}}
+{{define "content"}}
+<h1>Verdict</h1>
+{{if .Correct}}
+  <p class="verdict-good">CORRECT — justice is served.</p>
+  <p>{{.Accused}} was indeed the killer.</p>
+{{else}}
+  <p class="verdict-bad">WRONG — the real killer walks free.</p>
+  <p>You accused {{.Accused}}, but the murderer was <strong>{{.Murderer}}</strong>.</p>
+{{end}}
+
+<div class="panel rating">
+  <div class="stars" title="{{.Rating.Stars}} of 5">{{.Rating.StarBar}}</div>
+  <p class="rating-title">{{.Rating.Title}}</p>
+  <p>{{.Rating.Blurb}}</p>
+  <p class="dim">{{.Rating.Detail}}</p>
+</div>
+
+<div class="panel">
+  <h2 style="margin-top:0">The case against {{.Murderer}}</h2>
+  <ul class="clean">
+    {{if .Testimony}}{{if .LieWitness}}<li>Claimed to be in {{.LieClaim}} — but {{.LieWitness}} saw them in {{.LieScene}}. A lie.</li>{{end}}{{end}}
+    <li>Was at the scene: {{.Scene}}</li>
+    <li>Could reach the weapon: {{.Weapon}}</li>
+    <li>Had motive: {{.Motive}}</li>
+  </ul>
+</div>
+
+<div class="panel share">
+  <h2 style="margin-top:0">Challenge a friend</h2>
+  <p class="dim">Send them this link to drop them into the exact same mystery — then see if they can beat your rating.</p>
+  <textarea id="share-text" class="share-box" readonly rows="3">{{.ShareText}}
+{{.ShareURL}}</textarea>
+  <p>
+    <button class="btn" type="button" id="copy-share">Copy challenge</button>
+    <a class="btn ghost" href="{{.ShareURL}}">Open the case</a>
+  </p>
+</div>
+
+<p class="repro">seed {{.Seed}}, {{.Difficulty}} — reproduce on the CLI with: <code>-seed {{.Seed}} -difficulty {{.Difficulty}}{{if not .Testimony}} -testimony=false{{end}}{{if .MultiLiar}} -liars{{end}}{{if .Map}} -map{{end}}</code></p>
+<p><a class="btn" href="/">Play another case</a></p>
+
+<script>
+(function () {
+  var btn = document.getElementById('copy-share'), box = document.getElementById('share-text');
+  if (!btn || !box) return;
+  btn.addEventListener('click', function () {
+    box.select();
+    if (navigator.clipboard) { navigator.clipboard.writeText(box.value); }
+    else { document.execCommand('copy'); }
+    btn.textContent = 'Copied!';
+    setTimeout(function () { btn.textContent = 'Copy challenge'; }, 2000);
+  });
+})();
+</script>
+{{end}}

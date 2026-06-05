@@ -1,0 +1,11 @@
+{{define "title"}}Witness Sightings{{end}}
+{{define "content"}}
+<h1>Witness sightings</h1>
+<p class="dim">The guests' own accounts, and what others recall. {{if .MultiLiar}}More than one account won't match the sightings — but only one of those liars is the killer…{{else}}One account will not match the sightings…{{end}}</p>
+<div class="panel">
+  <h2 style="margin-top:0">Accounts</h2>
+  <ul class="clean">{{range .Accounts}}<li>{{.}}</li>{{end}}</ul>
+  <h2>Sightings</h2>
+  <ul class="clean">{{range .Sightings}}<li>{{.}}</li>{{end}}</ul>
+</div>
+{{end}}

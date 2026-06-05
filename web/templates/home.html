@@ -1,0 +1,41 @@
+{{define "title"}}A New Case{{end}}
+{{define "content"}}
+<h1>A procedural British murder-mystery</h1>
+<p class="dim">
+  One guest is the killer: the single person who was at the scene, could reach
+  the murder weapon, and held a motive. Examine the suspects, cross-check the
+  witness sightings, mark up your deduction grid — then name the culprit.
+</p>
+
+<div class="panel">
+  <form method="post" action="/new">
+    <label class="field">
+      <span>Suspects (3–10)</span>
+      <input type="number" name="suspects" min="3" max="10" value="6">
+    </label>
+    <label class="field">
+      <span>Difficulty</span>
+      <select name="difficulty">
+        {{range .Difficulties}}<option value="{{.}}"{{if eq . "medium"}} selected{{end}}>{{.}}</option>{{end}}
+      </select>
+    </label>
+    <label class="field">
+      <span>Seed (optional — leave blank for a random case)</span>
+      <input type="text" name="seed" inputmode="numeric" placeholder="e.g. 42">
+    </label>
+    <label class="field">
+      <input type="checkbox" name="testimony" checked>
+      Witness testimony (the murderer lies about where they were)
+    </label>
+    <label class="field">
+      <input type="checkbox" name="liars">
+      Multiple liars (some innocents lie too — catching one isn't enough)
+    </label>
+    <label class="field">
+      <input type="checkbox" name="map">
+      Village map (spatial alibis — distance, not just the room, can clear a suspect)
+    </label>
+    <button class="btn" type="submit">Begin the investigation</button>
+  </form>
+</div>
+{{end}}

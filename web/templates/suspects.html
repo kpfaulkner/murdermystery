@@ -1,0 +1,15 @@
+{{define "title"}}The Suspects{{end}}
+{{define "content"}}
+<h1>The suspects</h1>
+<p class="dim">Examine each dossier: their account, who could reach the weapon, their motive, and the whispers about them.</p>
+<div class="panel">
+  <ul class="clean">
+    {{range .Suspects}}
+    <li>
+      {{if .Examined}}<span class="tick">✓</span> {{else}}<span class="dim">·</span> {{end}}
+      <a href="/suspect/{{.Index}}">{{.Name}}</a>
+    </li>
+    {{end}}
+  </ul>
+</div>
+{{end}}

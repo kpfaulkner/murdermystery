@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{block "title" .}}Whodunnit{{end}} · Whodunnit</title>
+<style>
+  :root {
+    --bg: #1a1822; --panel: #232030; --ink: #e8e6f0; --dim: #9b96b0;
+    --accent: #8f7bff; --pink: #ff87d7; --amber: #ffce5f;
+    --good: #5fd75f; --bad: #ff6b6b; --line: #383350;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.55 Georgia, "Times New Roman", serif;
+  }
+  a { color: var(--pink); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 1.5rem 1.25rem 3rem; }
+  header.bar {
+    background: var(--accent); color: #fff; font-weight: bold;
+    letter-spacing: .12em; padding: .55rem 1rem; text-transform: uppercase;
+  }
+  header.bar a { color: #fff; }
+  nav.menu {
+    display: flex; flex-wrap: wrap; gap: .25rem; margin: 1rem 0 1.5rem;
+    border-bottom: 1px solid var(--line); padding-bottom: 1rem;
+    font-family: system-ui, sans-serif; font-size: .85rem;
+  }
+  nav.menu a { padding: .35rem .7rem; border-radius: 999px; color: var(--dim); }
+  nav.menu a:hover { background: var(--panel); color: var(--ink); text-decoration: none; }
+  nav.menu .count { color: var(--dim); margin-left: auto; align-self: center; font-style: italic; }
+  h1 { font-size: 1.6rem; color: var(--pink); margin: .2rem 0 1rem; }
+  h2 { font-size: 1.1rem; color: var(--amber); margin: 1.6rem 0 .5rem; letter-spacing: .04em; }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 1rem 1.25rem; }
+  .dim { color: var(--dim); }
+  .weapon { color: var(--amber); }
+  ul.clean { list-style: none; padding: 0; margin: .25rem 0; }
+  ul.clean li { padding: .25rem 0; border-bottom: 1px dotted var(--line); }
+  ul.clean li:last-child { border-bottom: 0; }
+  .btn {
+    display: inline-block; font-family: system-ui, sans-serif; font-size: .9rem;
+    background: var(--accent); color: #fff; border: 0; border-radius: 7px;
+    padding: .5rem .95rem; cursor: pointer;
+  }
+  .btn:hover { filter: brightness(1.1); text-decoration: none; }
+  .btn.ghost { background: transparent; border: 1px solid var(--line); color: var(--ink); }
+  label.field { display: block; margin: .8rem 0; font-family: system-ui, sans-serif; font-size: .9rem; }
+  label.field span { display: block; color: var(--dim); margin-bottom: .25rem; }
+  select, input[type=number], input[type=text] {
+    background: var(--bg); color: var(--ink); border: 1px solid var(--line);
+    border-radius: 6px; padding: .45rem .6rem; font: inherit; min-width: 12rem;
+  }
+  .tick { color: var(--good); }
+  .near { color: var(--good); font-size: .85rem; }
+  .far { color: var(--dim); font-size: .85rem; }
+  ul.village li { font-family: system-ui, sans-serif; font-size: .9rem; }
+  /* deduction grid */
+  table.grid { border-collapse: collapse; margin: .5rem 0; font-family: system-ui, sans-serif; }
+  table.grid th, table.grid td { padding: .3rem .2rem; text-align: center; }
+  table.grid th.name, table.grid td.name { text-align: left; padding-right: 1rem; font-family: Georgia, serif; }
+  table.grid thead th { color: var(--amber); font-size: .8rem; letter-spacing: .05em; }
+  .cell button {
+    width: 2.4rem; height: 2.2rem; font-size: 1.2rem; cursor: pointer;
+    background: var(--bg); border: 1px solid var(--line); border-radius: 6px; color: var(--dim);
+  }
+  .cell button:hover { border-color: var(--accent); }
+  .cell button.yes { color: var(--good); border-color: var(--good); }
+  .cell button.no { color: var(--bad); border-color: var(--bad); }
+  .cell button.maybe { color: var(--amber); border-color: var(--amber); }
+  tr.prime td.name::after { content: " ← prime suspect"; color: var(--good); font-size: .8rem; }
+  .legend { color: var(--dim); font-size: .82rem; font-style: italic; margin-top: .5rem; }
+  .verdict-good { color: var(--good); font-weight: bold; font-size: 1.3rem; }
+  .verdict-bad { color: var(--bad); font-weight: bold; font-size: 1.3rem; }
+  .panel.rating { text-align: center; }
+  .rating .stars { color: var(--amber); font-size: 1.8rem; letter-spacing: .15em; }
+  .rating .rating-title { font-size: 1.2rem; color: var(--pink); margin: .3rem 0 .4rem; }
+  .repro { color: var(--dim); font-size: .8rem; font-family: system-ui, sans-serif; margin-top: 1.5rem; }
+  textarea.share-box {
+    width: 100%; resize: vertical; margin: .5rem 0;
+    background: var(--bg); color: var(--ink); border: 1px solid var(--line);
+    border-radius: 6px; padding: .55rem .7rem; font: .85rem/1.5 system-ui, sans-serif;
+  }
+  /* two-column layout: main content + always-visible deduction grid */
+  .layout { display: flex; gap: 1.75rem; align-items: flex-start; justify-content: center; padding: 0 1rem; }
+  .layout > .wrap { margin: 0; padding-left: 0; padding-right: 0; }
+  aside.sidebar { flex: 0 0 300px; position: sticky; top: 1rem; padding-top: 1.5rem; }
+  aside.sidebar .panel { padding: .85rem 1rem; }
+  .side-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: .5rem; }
+  .side-head h2 { margin: 0; font-size: 1rem; }
+  .side-head .open-grid { font-size: 1.1rem; }
+  aside.sidebar table.grid { width: 100%; margin: .25rem 0; font-size: .78rem; }
+  aside.sidebar td.name { font-size: .8rem; line-height: 1.2; }
+  aside.sidebar .cell button { width: 1.9rem; height: 1.8rem; font-size: 1rem; }
+  @media (max-width: 1024px) {
+    .layout { flex-direction: column; align-items: center; }
+    aside.sidebar { position: static; flex: none; width: 100%; max-width: 760px; padding-top: 0; }
+  }
+</style>
+</head>
+<body>
+<header class="bar"><a href="/">Whodunnit</a></header>
+{{if and .Nav.Grid (ne .Nav.Path "/grid")}}
+<div class="layout">
+  <main class="wrap">
+    {{template "navmenu" .}}
+    {{block "content" .}}{{end}}
+  </main>
+  <aside class="sidebar">{{template "gridpanel" .Nav.Grid}}</aside>
+</div>
+{{else}}
+<div class="wrap">
+  {{if .Nav.Active}}{{template "navmenu" .}}{{end}}
+  {{block "content" .}}{{end}}
+</div>
+{{end}}
+</body>
+</html>
+
+{{define "navmenu"}}
+<nav class="menu">
+  <a href="/case">The Case</a>
+  <a href="/suspects">Suspects</a>
+  {{if .Nav.Testimony}}<a href="/sightings">Sightings</a>{{end}}
+  <a href="/grid">Deduction Grid</a>
+  <a href="/accuse">Accuse</a>
+  <a href="/">New Game</a>
+  <span class="count">{{.Nav.Examined}}/{{.Nav.Total}} examined{{if .Nav.Decided}} · case closed{{end}}</span>
+</nav>
+{{end}}
+
+{{/* gridpanel wraps the grid for the always-visible side panel. Dot is a *gridData. */}}
+{{define "gridpanel"}}
+<div class="panel">
+  <div class="side-head">
+    <h2>Deduction grid</h2>
+    <a class="dim open-grid" href="/grid" title="Open the full grid">⤢</a>
+  </div>
+  {{template "gridtable" .}}
+  <p class="legend">✓ fits · ✗ ruled out · ? unsure · · unknown</p>
+</div>
+{{end}}
+
+{{/* gridtable renders the suspect × condition grid. Dot is a *gridData; each
+     cell posts back to /grid and returns the player to ReturnPath. */}}
+{{define "gridtable"}}
+<table class="grid">
+  <thead>
+    <tr>
+      <th class="name"></th>
+      {{range .Columns}}<th>{{.}}</th>{{end}}
+    </tr>
+  </thead>
+  <tbody>
+    {{$return := .ReturnPath}}
+    {{range .Rows}}
+    <tr{{if .Prime}} class="prime"{{end}}>
+      <td class="name">{{.Name}}</td>
+      {{range .Cells}}
+      <td class="cell">
+        <form method="post" action="/grid">
+          <input type="hidden" name="row" value="{{.Row}}">
+          <input type="hidden" name="col" value="{{.Col}}">
+          <input type="hidden" name="return" value="{{$return}}">
+          <button class="{{.Class}}" type="submit" title="cycle">{{.Glyph}}</button>
+        </form>
+      </td>
+      {{end}}
+    </tr>
+    {{end}}
+  </tbody>
+</table>
+{{end}}
