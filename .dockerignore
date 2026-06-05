@@ -1,0 +1,10 @@
+.git
+.idea
+.vscode
+*.exe
+*.exe~
+*.test
+*.out
+README.md
+LICENSE
+fly.toml

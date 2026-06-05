@@ -1,0 +1,15 @@
+# render.yaml — Render Blueprint for the murdermystery web server.
+# Render builds the single Go binary and runs it as a web service. The free
+# plan spins the service down after ~15 min idle; since sessions are in memory,
+# a spin-down (or any redeploy) ends games in progress. Fine for casual play.
+services:
+  - type: web
+    name: murdermystery
+    runtime: go
+    plan: free
+    region: singapore          # closest free region to AU; also: oregon, frankfurt
+    branch: main
+    buildCommand: go build -o app .
+    # Render injects $PORT; bind to it rather than the localhost:8080 default.
+    startCommand: ./app -serve -addr :$PORT
+    healthCheckPath: /

@@ -1,0 +1,23 @@
+# fly.toml — Fly.io deployment config for the murdermystery web server.
+# Run `fly launch --copy-config --no-deploy` once to claim an app name and
+# region, then `fly deploy`.
+
+app = "murdermystery"          # change to a globally-unique name if taken
+primary_region = "syd"         # Sydney; pick the region closest to your players
+
+[build]
+  dockerfile = "Dockerfile"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  # Sessions live in memory, so the app must run as a SINGLE instance and stay
+  # up — never load-balance across machines or scale to zero, or players lose
+  # their game mid-case.
+  auto_stop_machines = false
+  auto_start_machines = false
+  min_machines_running = 1
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "256mb"
