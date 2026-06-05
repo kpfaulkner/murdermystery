@@ -1,4 +1,4 @@
-module github.com/kpfaulkner/whodunnit
+module github.com/kpfaulkner/murdermystery
 
 go 1.25.0
 

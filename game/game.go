@@ -7,7 +7,7 @@ import (
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
 
-	"github.com/kpfaulkner/whodunnit/mystery"
+	"github.com/kpfaulkner/murdermystery/mystery"
 )
 
 // Run launches the interactive game for a generated mystery.

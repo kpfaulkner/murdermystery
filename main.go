@@ -7,9 +7,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/kpfaulkner/whodunnit/game"
-	"github.com/kpfaulkner/whodunnit/mystery"
-	"github.com/kpfaulkner/whodunnit/web"
+	"github.com/kpfaulkner/murdermystery/game"
+	"github.com/kpfaulkner/murdermystery/mystery"
+	"github.com/kpfaulkner/murdermystery/web"
 )
 
 func main() {

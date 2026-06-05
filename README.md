@@ -1,7 +1,7 @@
-# whodunnit
+# murdermystery
 
 A procedural British murder-mystery generator. Give it a cast size and it
-produces a self-contained, **guaranteed-solvable** whodunnit — either as a
+produces a self-contained, **guaranteed-solvable** murdermystery — either as a
 printable case file or as an interactive terminal detective game.
 
 ## Run

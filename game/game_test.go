@@ -8,7 +8,7 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 
-	"github.com/kpfaulkner/whodunnit/mystery"
+	"github.com/kpfaulkner/murdermystery/mystery"
 )
 
 var (

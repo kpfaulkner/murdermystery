@@ -1,4 +1,4 @@
-// Package mystery generates self-contained, guaranteed-solvable whodunnits.
+// Package mystery generates self-contained, guaranteed-solvable murdermysterys.
 //
 // The deduction the player performs is a three-way intersection: the murderer
 // is the single suspect who was (a) at the scene of the crime, (b) had access

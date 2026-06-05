@@ -8,7 +8,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 
-	"github.com/kpfaulkner/whodunnit/mystery"
+	"github.com/kpfaulkner/murdermystery/mystery"
 )
 
 var (
@@ -26,7 +26,7 @@ var (
 // frame wraps a screen with a consistent title bar and footer hint.
 func (mo model) frame(title, body, hint string) string {
 	var b strings.Builder
-	b.WriteString(titleStyle.Render("WHODUNNIT · " + title))
+	b.WriteString(titleStyle.Render("murdermystery · " + title))
 	b.WriteString("\n\n")
 	b.WriteString(body)
 	b.WriteString("\n\n")
